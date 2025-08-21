@@ -120,7 +120,7 @@
                     <button data-service-id="S4" data-service-name="mfg-bk-api"
                         class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
                         <b class="font-semibold service-name">mfg-bk-api</b>
-                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 15, Methods: 11)</span>
+                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 15, Methods: 25)</span>
                     </button>
                     <button data-service-id="S5" data-service-name="mfg-tpc-cms"
                         class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
@@ -158,17 +158,31 @@
                 'S2': { name: 'mfg-customer-service-api', methods: ['GetSystemTime', 'GetCustomerByID', 'RegisterCustomer', 'UpdateCustomer', 'RegisterAddressByID', 'UpdateAddressByID', 'RegisterCustomerPhoneNumber', 'UpdateCustomerPhoneNumber'].map(m => ({name: m, tags: []})) },
                 'S3': { name: 'mfg-menu-manager-api', methods: ['GetItem', 'GetModGroupsList', 'GetModifiersList'].map(m => ({name: m, tags: []})) },
                 'S4': { name: 'mfg-bk-api', methods: [
-                    { name: 'UpdateOrder', tags: ['lineman', 'grab'] },
-                    { name: 'GetOrderDetails', tags: ['lineman', 'grab'] },
+                    { name: 'ActiveCustomerAccount', tags: ['grab'] },
+                    { name: 'GetActiveOrdersList', tags: ['grab'] },
+                    { name: 'GetCompList', tags: ['grab'] },
+                    { name: 'GetCustomerByEmail', tags: ['grab'] },
+                    { name: 'GetCustomerByID', tags: [] },
                     { name: 'GetItem', tags: ['lineman', 'grab'] },
-                    { name: 'GetStore', tags: ['lineman', 'grab'] },
+                    { name: 'GetItemsList', tags: ['grab'] },
                     { name: 'GetModGroupsList', tags: ['lineman', 'grab'] },
                     { name: 'GetModifiersList', tags: ['lineman', 'grab'] },
-                    { name: 'RegisterCustomer', tags: ['lineman', 'grab'] },
+                    { name: 'GetOrderDetails', tags: ['lineman', 'grab'] },
+                    { name: 'GetOrderStatusChanges', tags: ['lineman', 'grab'] },
+                    { name: 'GetStore', tags: ['lineman', 'grab'] },
+                    { name: 'GetStoresList', tags: ['grab'] },
+                    { name: 'GetSystemParametersList', tags: ['grab'] },
+                    { name: 'GetWebBuildTypeList', tags: ['grab'] },
+                    { name: 'GetZone', tags: ['grab'] },
                     { name: 'IsCustomerUserNameOrEmailUsed', tags: [] },
-                    { name: 'GetCustomerByID', tags: [] },
+                    { name: 'RegisterAddress', tags: ['lineman', 'grab'] },
+                    { name: 'RegisterCustomer', tags: ['lineman', 'grab'] },
+                    { name: 'UpdateAddress', tags: ['grab'] },
+                    { name: 'UpdateOrder', tags: ['lineman', 'grab'] },
                     { name: 'ValidateOrder', tags: [] },
-                    { name: 'RegisterAddress', tags: ['lineman', 'grab'] }
+                    { name: 'cancelOrder', tags: ['lineman'] },
+                    { name: 'apiGetStoreBu', tags: ['lineman'] },
+                    { name: 'apiGetOrderCreated', tags: ['lineman'] }
                 ]},
                 'S5': { name: 'mfg-tpc-cms', methods: ['GetSystemInfo', 'GetSystemInfo2', 'GetItem', 'GetStores', 'GetStore', 'GetWebDimensionListPart', 'GetCustomerAddresses', 'GetOrderStatusList', 'GetOrderDetails'].map(m => ({name: m, tags: []})) },
                 'S6': { name: 'mfg-tpc-api', methods: ['GetCustomerByID', 'UpdateCustomer', 'RegisterCustomer', 'GetCustomer', 'ActiveCustomerAccount', 'IsCustomerUserNameOrEmailUsed', 'UpdateCustomerPhoneNumber', 'RegisterCustomerPhoneNumber', 'UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetActiveOrdersList', 'UpdateAddress', 'GetCustomerAddresses', 'GetWebCitiesList', 'GetWebDistrictsList', 'RegisterAddress', 'UpdateAddressStoreDetails', 'RegisterAddressStoreDetails', 'GetStoreArea', 'GetStore', 'GetCompList', 'GetPromoBogoList', 'GetItem'].map(m => ({name: m, tags: []})) },
@@ -176,11 +190,11 @@
             };
 
             const allMethods = {
-                'G2': { title: 'Customer Management', methods: ['GetCustomerByID', 'UpdateCustomer', 'RegisterCustomer', 'GetCustomer', 'ActiveCustomerAccount', 'IsCustomerUserNameOrEmailUsed', 'UpdateCustomerPhoneNumber', 'RegisterCustomerPhoneNumber'] },
-                'G5': { title: 'Order Management', methods: ['UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetActiveOrdersList', 'GetOrderStatusList', 'SendCommand', 'ValidateOrder'] },
+                'G2': { title: 'Customer Management', methods: ['GetCustomerByID', 'UpdateCustomer', 'RegisterCustomer', 'GetCustomer', 'ActiveCustomerAccount', 'IsCustomerUserNameOrEmailUsed', 'UpdateCustomerPhoneNumber', 'RegisterCustomerPhoneNumber', 'GetCustomerByEmail'] },
+                'G5': { title: 'Order Management', methods: ['UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetActiveOrdersList', 'GetOrderStatusList', 'SendCommand', 'ValidateOrder', 'GetOrderStatusChanges', 'cancelOrder', 'apiGetOrderCreated'] },
                 'G4': { title: 'Address Management', methods: ['UpdateAddress', 'GetCustomerAddresses', 'GetWebCitiesList', 'GetWebDistrictsList', 'RegisterAddress', 'UpdateAddressStoreDetails', 'RegisterAddressStoreDetails', 'UpdateAddressByID', 'RegisterAddressByID'] },
-                'G3': { title: 'Store & Menu Info', methods: ['GetStoreArea', 'GetStore', 'GetStores', 'GetCompList', 'GetPromoBogoList', 'GetItem', 'GetWebDimensionListPart', 'GetModGroupsList', 'GetModifiersList'] },
-                'G1': { title: 'System & Info', methods: ['GetSystemInfo', 'GetSystemInfo2', 'GetSystemTime'] }
+                'G3': { title: 'Store & Menu Info', methods: ['GetStoreArea', 'GetStore', 'GetStores', 'GetCompList', 'GetPromoBogoList', 'GetItem', 'GetWebDimensionListPart', 'GetModGroupsList', 'GetModifiersList', 'GetItemsList', 'GetStoresList', 'GetZone', 'GetWebBuildTypeList', 'apiGetStoreBu'] },
+                'G1': { title: 'System & Info', methods: ['GetSystemInfo', 'GetSystemInfo2', 'GetSystemTime', 'GetSystemParametersList'] }
             };
 
             // --- STATE & DOM ELEMENTS ---
