@@ -179,10 +179,7 @@
                     { name: 'RegisterCustomer', tags: ['lineman', 'grab'] },
                     { name: 'UpdateAddress', tags: ['grab'] },
                     { name: 'UpdateOrder', tags: ['lineman', 'grab'] },
-                    { name: 'ValidateOrder', tags: [] },
-                    { name: 'cancelOrder', tags: ['lineman'] },
-                    { name: 'apiGetStoreBu', tags: ['lineman'] },
-                    { name: 'apiGetOrderCreated', tags: ['lineman'] }
+                    { name: 'ValidateOrder', tags: [] }
                 ]},
                 'S5': { name: 'mfg-tpc-cms', methods: ['GetSystemInfo', 'GetSystemInfo2', 'GetItem', 'GetStores', 'GetStore', 'GetWebDimensionListPart', 'GetCustomerAddresses', 'GetOrderStatusList', 'GetOrderDetails'].map(m => ({name: m, tags: []})) },
                 'S6': { name: 'mfg-tpc-api', methods: ['GetCustomerByID', 'UpdateCustomer', 'RegisterCustomer', 'GetCustomer', 'ActiveCustomerAccount', 'IsCustomerUserNameOrEmailUsed', 'UpdateCustomerPhoneNumber', 'RegisterCustomerPhoneNumber', 'UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetActiveOrdersList', 'UpdateAddress', 'GetCustomerAddresses', 'GetWebCitiesList', 'GetWebDistrictsList', 'RegisterAddress', 'UpdateAddressStoreDetails', 'RegisterAddressStoreDetails', 'GetStoreArea', 'GetStore', 'GetCompList', 'GetPromoBogoList', 'GetItem'].map(m => ({name: m, tags: []})) },
