@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Services & SDM Method Groups - Tree View</title>
+    <!-- Tailwind CSS for rapid UI development -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Sarabun for a modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom styles to override or supplement Tailwind */
+        body {
+            font-family: 'Sarabun', 'Inter', sans-serif;
+            background-color: #f8fafc; /* Tailwind's slate-50 */
+        }
+
+        /* Custom gradient for the active button */
+        .active-gradient {
+            background-image: linear-gradient(to right, #6366f1, #8b5cf6); /* Indigo to Purple */
+        }
+        
+        /* Icon rotation for collapse/expand */
+        .group-title-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .is-collapsed .group-title-icon {
+            transform: rotate(-90deg);
+        }
+        
+        /* Smooth animation for method list */
+        .method-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+
+        .is-open {
+            max-height: 1000px; /* Set a large enough value to show all items */
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-6 md:p-8">
+
+    <div class="container max-w-7xl mx-auto bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-800">Client Services Relationship</h1>
+            <p class="text-slate-500 mt-1">Overview of the connection between Services and SDM Method Groups</p>
+        </div>
+
+        <div class="main-layout flex flex-col md:flex-row gap-8">
+
+            <!-- Column 1: Client Services -->
+            <div class="service-menu md:w-1/3 lg:w-1/4">
+                <h2 class="text-xl font-semibold text-slate-700 mb-4 pb-2 border-b-2 border-slate-200">Client Services</h2>
+                <div class="space-y-2">
+                    <!-- Service buttons -->
+                    <button data-service-id="S1" data-service-name="mfg-order-management-service-api"
+                        class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
+                        <b class="font-semibold service-name">mfg-order-management-service-api</b>
+                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 3, Methods: 6)</span>
+                    </button>
+                    <button data-service-id="S2" data-service-name="mfg-customer-service-api"
+                        class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
+                        <b class="font-semibold service-name">mfg-customer-service-api</b>
+                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 14, Methods: 8)</span>
+                    </button>
+                    <button data-service-id="S3" data-service-name="mfg-menu-manager-api"
+                        class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
+                        <b class="font-semibold service-name">mfg-menu-manager-api</b>
+                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 3, Methods: 3)</span>
+                    </button>
+                    <button data-service-id="S4" data-service-name="mfg-bk-api"
+                        class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
+                        <b class="font-semibold service-name">mfg-bk-api</b>
+                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 15, Methods: 11)</span>
+                    </button>
+                    <button data-service-id="S5" data-service-name="mfg-tpc-cms"
+                        class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
+                        <b class="font-semibold service-name">mfg-tpc-cms</b>
+                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 11, Methods: 9)</span>
+                    </button>
+                    <button data-service-id="S6" data-service-name="mfg-tpc-api"
+                        class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
+                        <b class="font-semibold service-name">mfg-tpc-api</b>
+                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 29, Methods: 24)</span>
+                    </button>
+                    <button data-service-id="S7" data-service-name="mfg-1112d-api"
+                        class="w-full text-left p-3 rounded-lg transition-all duration-300 bg-slate-100 hover:bg-slate-200 text-slate-700">
+                        <b class="font-semibold service-name">mfg-1112d-api</b>
+                        <span class="text-xs text-slate-500 block mt-1">(Endpoints: 14, Methods: 14)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Column 2: Tree View Display -->
+            <div id="tree_view_div" class="flex-1 border border-slate-200 rounded-xl p-6">
+                 <div id="initial-message" class="flex items-center justify-center h-full text-slate-400">
+                    <p>👈 กรุณาเลือก Service จากเมนูด้านซ้ายเพื่อดู Method ที่เกี่ยวข้อง</p>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- DATA ---
+            const serviceMethodMap = {
+                'S1': { methods: ['GetCustomerByID', 'UpdateAddressByID', 'UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetCompList'] },
+                'S2': { methods: ['GetSystemTime', 'GetCustomerByID', 'RegisterCustomer', 'UpdateCustomer', 'RegisterAddressByID', 'UpdateAddressByID', 'RegisterCustomerPhoneNumber', 'UpdateCustomerPhoneNumber'] },
+                'S3': { methods: ['GetItem', 'GetModGroupsList', 'GetModifiersList'] },
+                'S4': { methods: ['UpdateOrder', 'GetOrderDetails', 'GetItem', 'GetStore', 'GetModGroupsList', 'GetModifiersList', 'RegisterCustomer', 'IsCustomerUserNameOrEmailUsed', 'GetCustomerByID', 'ValidateOrder', 'RegisterAddress'] },
+                'S5': { methods: ['GetSystemInfo', 'GetSystemInfo2', 'GetItem', 'GetStores', 'GetStore', 'GetWebDimensionListPart', 'GetCustomerAddresses', 'GetOrderStatusList', 'GetOrderDetails'] },
+                'S6': { methods: ['GetCustomerByID', 'UpdateCustomer', 'RegisterCustomer', 'GetCustomer', 'ActiveCustomerAccount', 'IsCustomerUserNameOrEmailUsed', 'UpdateCustomerPhoneNumber', 'RegisterCustomerPhoneNumber', 'UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetActiveOrdersList', 'UpdateAddress', 'GetCustomerAddresses', 'GetWebCitiesList', 'GetWebDistrictsList', 'RegisterAddress', 'UpdateAddressStoreDetails', 'RegisterAddressStoreDetails', 'GetStoreArea', 'GetStore', 'GetCompList', 'GetPromoBogoList', 'GetItem'] },
+                'S7': { methods: ['GetCustomerByID', 'RegisterAddress', 'UpdateAddress', 'UpdateCustomer', 'UpdateOrder', 'GetOrderDetails', 'GetStore', 'AddOrderPayment', 'GetCompList', 'GetPromoBogoList', 'GetItem', 'GetActiveOrdersList', 'GetCustomerAddresses', 'SendCommand'] }
+            };
+
+            const allMethods = {
+                'G2': { title: 'Customer Management', methods: ['GetCustomerByID', 'UpdateCustomer', 'RegisterCustomer', 'GetCustomer', 'ActiveCustomerAccount', 'IsCustomerUserNameOrEmailUsed', 'UpdateCustomerPhoneNumber', 'RegisterCustomerPhoneNumber'] },
+                'G5': { title: 'Order Management', methods: ['UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetActiveOrdersList', 'GetOrderStatusList', 'SendCommand', 'ValidateOrder'] },
+                'G4': { title: 'Address Management', methods: ['UpdateAddress', 'GetCustomerAddresses', 'GetWebCitiesList', 'GetWebDistrictsList', 'RegisterAddress', 'UpdateAddressStoreDetails', 'RegisterAddressStoreDetails', 'UpdateAddressByID', 'RegisterAddressByID'] },
+                'G3': { title: 'Store & Menu Info', methods: ['GetStoreArea', 'GetStore', 'GetStores', 'GetCompList', 'GetPromoBogoList', 'GetItem', 'GetWebDimensionListPart', 'GetModGroupsList', 'GetModifiersList'] },
+                'G1': { title: 'System & Info', methods: ['GetSystemInfo', 'GetSystemInfo2', 'GetSystemTime'] }
+            };
+
+            // --- DOM ELEMENTS ---
+            const serviceButtons = document.querySelectorAll('.service-menu button');
+            const treeViewDiv = document.getElementById('tree_view_div');
+            const initialMessage = document.getElementById('initial-message');
+
+            /**
+             * Initializes the application and sets up event listeners.
+             */
+            function initialize() {
+                serviceButtons.forEach(button => button.addEventListener('click', handleServiceClick));
+                
+                // Set default selection to the first service
+                const firstServiceButton = document.querySelector('.service-menu button');
+                if (firstServiceButton) {
+                    firstServiceButton.click();
+                }
+            }
+
+            /**
+             * Handles clicks on service buttons to update the UI and render the tree view.
+             */
+            function handleServiceClick(event) {
+                const button = event.currentTarget;
+                const selectedServiceId = button.dataset.serviceId;
+                const selectedServiceName = button.dataset.serviceName;
+
+                initialMessage.style.display = 'none';
+                updateButtonStyles(button);
+                renderTreeView(selectedServiceId, selectedServiceName);
+            }
+
+            /**
+             * Updates the visual state of service buttons.
+             */
+            function updateButtonStyles(activeButton) {
+                serviceButtons.forEach(btn => {
+                    btn.classList.remove('active-gradient', 'text-white', 'shadow-lg');
+                    btn.classList.add('bg-slate-100', 'text-slate-700');
+                    const span = btn.querySelector('span');
+                    if (span) {
+                        span.classList.remove('text-slate-200');
+                        span.classList.add('text-slate-500');
+                    }
+                });
+
+                activeButton.classList.add('active-gradient', 'text-white', 'shadow-lg');
+                const span = activeButton.querySelector('span');
+                if (span) {
+                    span.classList.add('text-slate-200');
+                }
+            }
+
+            /**
+             * Renders the tree view for a given service.
+             */
+            function renderTreeView(serviceId, serviceName) {
+                let html = `<h2 class="text-2xl font-bold text-slate-800 mb-6 break-words">${serviceName}</h2>`;
+                html += '<div class="space-y-4">';
+
+                let groupsFound = false;
+
+                Object.values(allMethods).forEach(groupData => {
+                    const relatedMethods = groupData.methods.filter(method => serviceMethodMap[serviceId].methods.includes(method));
+
+                    if (relatedMethods.length > 0) {
+                        groupsFound = true;
+                        html += `
+                            <div class="group-container">
+                                <div class="group-title flex items-center gap-2 text-lg font-semibold text-indigo-600 mb-2 cursor-pointer select-none p-2 rounded-md hover:bg-indigo-50">
+                                    <i class="fa-solid fa-caret-down group-title-icon w-3"></i>
+                                    <span>${groupData.title} (${relatedMethods.length})</span>
+                                </div>
+                                <ul class="method-list pl-6 space-y-1 border-l-2 border-indigo-200 ml-3">
+                                    ${relatedMethods.map(method => `<li class="text-slate-700 text-sm p-1.5 rounded hover:bg-slate-100">${method}()</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                });
+
+                if (!groupsFound) {
+                    html += `<p class="text-slate-400">No method groups found for this service.</p>`;
+                }
+
+                html += '</div>';
+                treeViewDiv.innerHTML = html;
+                
+                // Add event listeners for collapsing and set initial state to open
+                treeViewDiv.querySelectorAll('.group-title').forEach(title => {
+                    const list = title.nextElementSibling;
+                    const container = title.parentElement;
+                    
+                    // Start open
+                    list.classList.add('is-open');
+
+                    title.addEventListener('click', () => {
+                        list.classList.toggle('is-open');
+                        container.classList.toggle('is-collapsed');
+                    });
+                });
+            }
+
+            // --- INITIALIZATION ---
+            initialize();
+        });
+    </script>
+</body>
+</html>
