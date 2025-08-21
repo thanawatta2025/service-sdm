@@ -154,13 +154,25 @@
         document.addEventListener('DOMContentLoaded', function () {
             // --- DATA ---
             const serviceMethodMap = {
-                'S1': { name: 'mfg-order-management-service-api', methods: ['GetCustomerByID', 'UpdateAddressByID', 'UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetCompList'] },
-                'S2': { name: 'mfg-customer-service-api', methods: ['GetSystemTime', 'GetCustomerByID', 'RegisterCustomer', 'UpdateCustomer', 'RegisterAddressByID', 'UpdateAddressByID', 'RegisterCustomerPhoneNumber', 'UpdateCustomerPhoneNumber'] },
-                'S3': { name: 'mfg-menu-manager-api', methods: ['GetItem', 'GetModGroupsList', 'GetModifiersList'] },
-                'S4': { name: 'mfg-bk-api', methods: ['UpdateOrder', 'GetOrderDetails', 'GetItem', 'GetStore', 'GetModGroupsList', 'GetModifiersList', 'RegisterCustomer', 'IsCustomerUserNameOrEmailUsed', 'GetCustomerByID', 'ValidateOrder', 'RegisterAddress'] },
-                'S5': { name: 'mfg-tpc-cms', methods: ['GetSystemInfo', 'GetSystemInfo2', 'GetItem', 'GetStores', 'GetStore', 'GetWebDimensionListPart', 'GetCustomerAddresses', 'GetOrderStatusList', 'GetOrderDetails'] },
-                'S6': { name: 'mfg-tpc-api', methods: ['GetCustomerByID', 'UpdateCustomer', 'RegisterCustomer', 'GetCustomer', 'ActiveCustomerAccount', 'IsCustomerUserNameOrEmailUsed', 'UpdateCustomerPhoneNumber', 'RegisterCustomerPhoneNumber', 'UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetActiveOrdersList', 'UpdateAddress', 'GetCustomerAddresses', 'GetWebCitiesList', 'GetWebDistrictsList', 'RegisterAddress', 'UpdateAddressStoreDetails', 'RegisterAddressStoreDetails', 'GetStoreArea', 'GetStore', 'GetCompList', 'GetPromoBogoList', 'GetItem'] },
-                'S7': { name: 'mfg-1112d-api', methods: ['GetCustomerByID', 'RegisterAddress', 'UpdateAddress', 'UpdateCustomer', 'UpdateOrder', 'GetOrderDetails', 'GetStore', 'AddOrderPayment', 'GetCompList', 'GetPromoBogoList', 'GetItem', 'GetActiveOrdersList', 'GetCustomerAddresses', 'SendCommand'] }
+                'S1': { name: 'mfg-order-management-service-api', methods: ['GetCustomerByID', 'UpdateAddressByID', 'UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetCompList'].map(m => ({name: m, tags: []})) },
+                'S2': { name: 'mfg-customer-service-api', methods: ['GetSystemTime', 'GetCustomerByID', 'RegisterCustomer', 'UpdateCustomer', 'RegisterAddressByID', 'UpdateAddressByID', 'RegisterCustomerPhoneNumber', 'UpdateCustomerPhoneNumber'].map(m => ({name: m, tags: []})) },
+                'S3': { name: 'mfg-menu-manager-api', methods: ['GetItem', 'GetModGroupsList', 'GetModifiersList'].map(m => ({name: m, tags: []})) },
+                'S4': { name: 'mfg-bk-api', methods: [
+                    { name: 'UpdateOrder', tags: ['lineman', 'grab'] },
+                    { name: 'GetOrderDetails', tags: ['lineman', 'grab'] },
+                    { name: 'GetItem', tags: ['lineman', 'grab'] },
+                    { name: 'GetStore', tags: ['lineman', 'grab'] },
+                    { name: 'GetModGroupsList', tags: ['lineman', 'grab'] },
+                    { name: 'GetModifiersList', tags: ['lineman', 'grab'] },
+                    { name: 'RegisterCustomer', tags: ['lineman', 'grab'] },
+                    { name: 'IsCustomerUserNameOrEmailUsed', tags: [] },
+                    { name: 'GetCustomerByID', tags: [] },
+                    { name: 'ValidateOrder', tags: [] },
+                    { name: 'RegisterAddress', tags: ['lineman', 'grab'] }
+                ]},
+                'S5': { name: 'mfg-tpc-cms', methods: ['GetSystemInfo', 'GetSystemInfo2', 'GetItem', 'GetStores', 'GetStore', 'GetWebDimensionListPart', 'GetCustomerAddresses', 'GetOrderStatusList', 'GetOrderDetails'].map(m => ({name: m, tags: []})) },
+                'S6': { name: 'mfg-tpc-api', methods: ['GetCustomerByID', 'UpdateCustomer', 'RegisterCustomer', 'GetCustomer', 'ActiveCustomerAccount', 'IsCustomerUserNameOrEmailUsed', 'UpdateCustomerPhoneNumber', 'RegisterCustomerPhoneNumber', 'UpdateOrder', 'AddOrderPayment', 'GetOrderDetails', 'GetActiveOrdersList', 'UpdateAddress', 'GetCustomerAddresses', 'GetWebCitiesList', 'GetWebDistrictsList', 'RegisterAddress', 'UpdateAddressStoreDetails', 'RegisterAddressStoreDetails', 'GetStoreArea', 'GetStore', 'GetCompList', 'GetPromoBogoList', 'GetItem'].map(m => ({name: m, tags: []})) },
+                'S7': { name: 'mfg-1112d-api', methods: ['GetCustomerByID', 'RegisterAddress', 'UpdateAddress', 'UpdateCustomer', 'UpdateOrder', 'GetOrderDetails', 'GetStore', 'AddOrderPayment', 'GetCompList', 'GetPromoBogoList', 'GetItem', 'GetActiveOrdersList', 'GetCustomerAddresses', 'SendCommand'].map(m => ({name: m, tags: []})) }
             };
 
             const allMethods = {
@@ -195,6 +207,25 @@
                 };
             }
             
+            /**
+             * Returns Tailwind CSS classes for a given tag.
+             */
+            function getTagColorClasses(tag) {
+                const lowerTag = tag.toLowerCase();
+                switch (lowerTag) {
+                    case 'lineman':
+                        return 'bg-green-100 text-green-800';
+                    case 'grab':
+                        return 'bg-purple-100 text-purple-800';
+                    case 'shopeefood':
+                        return 'bg-orange-100 text-orange-800';
+                    case 'tpc':
+                        return 'bg-sky-100 text-sky-800';
+                    default:
+                        return 'bg-slate-100 text-slate-800';
+                }
+            }
+
             /**
              * Clears all selections and resets the view to its initial state.
              */
@@ -277,7 +308,9 @@
                     const serviceData = serviceMethodMap[nodeId];
                     let contentHtml = '';
                     Object.values(allMethods).forEach(groupData => {
-                        const relatedMethods = groupData.methods.filter(method => serviceData.methods.includes(method));
+                        const relatedMethods = groupData.methods.filter(methodName => 
+                            serviceData.methods.some(m => m.name === methodName)
+                        );
                         if (relatedMethods.length > 0) {
                             contentHtml += `
                                 <div class="mt-3 first:mt-0">
@@ -348,7 +381,7 @@
 
                 services.forEach(([serviceId, serviceData]) => {
                     groups.forEach(([groupId, groupData]) => {
-                        if (groupData.methods.some(method => serviceData.methods.includes(method))) {
+                        if (groupData.methods.some(methodName => serviceData.methods.some(m => m.name === methodName))) {
                             const p1 = nodePositions.get(serviceId);
                             const p2 = nodePositions.get(groupId);
                             const path = document.createElementNS(svgNs, "path");
@@ -376,7 +409,6 @@
                 graphContainer.innerHTML = '';
                 graphContainer.appendChild(svg);
                 
-                // Setup interactions after rendering
                 svg.querySelectorAll('.node-text').forEach(node => {
                     node.addEventListener('click', (event) => {
                         event.stopPropagation();
@@ -424,19 +456,40 @@
                 let contentHtml = `<h2 class="col-span-full text-2xl font-bold text-slate-800 mb-2 break-words">${serviceName}</h2>`;
                 let groupsFound = false;
                 let groupCardsHtml = '';
+                const serviceMethods = serviceMethodMap[serviceId].methods;
 
                 Object.values(allMethods).forEach(groupData => {
-                    const relatedMethods = groupData.methods.filter(method => serviceMethodMap[serviceId].methods.includes(method));
+                    const relatedMethods = groupData.methods.filter(methodName => 
+                        serviceMethods.some(m => m.name === methodName)
+                    );
+
                     if (relatedMethods.length > 0) {
                         groupsFound = true;
+                        
+                        const methodListHtml = serviceMethods
+                            .filter(methodObj => relatedMethods.includes(methodObj.name))
+                            .map(methodObj => {
+                                const tagsHtml = (methodObj.tags && methodObj.tags.length > 0)
+                                    ? `<div class="mt-2 flex flex-wrap items-center gap-1.5">${methodObj.tags.map(tag => {
+                                        const tagColorClasses = getTagColorClasses(tag);
+                                        return `<span class="text-xs font-medium ${tagColorClasses} px-2 py-0.5 rounded-full">${tag}</span>`;
+                                    }).join('')}</div>`
+                                    : '';
+                                
+                                return `<li class="py-3">
+                                    <span class="text-slate-600 text-sm">${methodObj.name}()</span>
+                                    ${tagsHtml}
+                                </li>`;
+                            }).join('');
+
                         groupCardsHtml += `
                             <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
                                 <h3 class="font-semibold text-indigo-600 mb-3 flex justify-between items-center">
                                     <span>${groupData.title}</span>
                                     <span class="text-xs font-normal bg-indigo-100 text-indigo-600 rounded-full px-2 py-0.5">${relatedMethods.length} Methods</span>
                                 </h3>
-                                <ul class="space-y-2">
-                                    ${relatedMethods.map(method => `<li class="text-slate-600 text-sm">${method}()</li>`).join('')}
+                                <ul class="space-y-0 divide-y divide-slate-200">
+                                    ${methodListHtml}
                                 </ul>
                             </div>
                         `;
@@ -454,7 +507,7 @@
             // --- INITIALIZATION ---
             renderOverviewGraph();
             initialize();
-            updateSelection('S6'); // Set default selection to mfg-tpc-api
+            updateSelection('S4'); // Set default selection to mfg-bk-api to show the change
             
             window.addEventListener('resize', debounce(renderOverviewGraph, 200));
         });
