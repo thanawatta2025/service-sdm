@@ -1,0 +1,49 @@
+/* Custom styles to override or supplement Tailwind */
+body {
+    font-family: 'Sarabun', 'Inter', sans-serif;
+    background-color: #f8fafc;
+    /* Tailwind's slate-50 */
+}
+
+/* Custom gradient for the active button */
+.active-gradient {
+    background-image: linear-gradient(to right, #6366f1, #8b5cf6);
+    /* Indigo to Purple */
+}
+
+/* Styles for the overview graph */
+#overview-graph svg .node-text {
+    font-size: 12px;
+    font-family: 'Sarabun', sans-serif;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: font-weight 0.2s ease, fill 0.2s ease;
+}
+
+#overview-graph svg .link-path {
+    fill: none;
+    stroke: #e2e8f0;
+    /* slate-200 */
+    stroke-width: 2;
+    transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+/* Highlight styles */
+#overview-graph svg .highlight-node {
+    font-weight: 700;
+    fill: #4f46e5;
+    /* indigo-600 */
+}
+
+#overview-graph svg .highlight-link {
+    stroke: #8b5cf6;
+    /* purple-500 */
+    stroke-width: 3;
+}
+
+#overview-graph svg .dimmed {
+    opacity: 0.2;
+}
